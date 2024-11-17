@@ -6,11 +6,9 @@ import com.digitaldart.guardian.area.monitoring.domain.model.queries.GetDeviceBy
 import com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.GuardianAreaDeviceRecordId;
 import com.digitaldart.guardian.area.monitoring.domain.services.DeviceCommandService;
 import com.digitaldart.guardian.area.monitoring.domain.services.DeviceQueryService;
+import com.digitaldart.guardian.area.monitoring.domain.services.HealthThresholdCommandService;
 import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.*;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.transform.AssignDeviceCommandFromResourceAssembler;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.transform.DeviceResourceFromEntityAssembler;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.transform.RegisterDeviceCommandFromResourceAssembler;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.transform.UpdateDeviceCommandFromResourceAssembler;
+import com.digitaldart.guardian.area.monitoring.interfaces.rest.transform.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,9 +22,12 @@ public class DevicesController {
     private final DeviceCommandService deviceCommandService;
     private final DeviceQueryService deviceQueryService;
 
-    public DevicesController(DeviceCommandService deviceCommandService, DeviceQueryService deviceQueryService) {
+    private final HealthThresholdCommandService healthThresholdCommandService;
+
+    public DevicesController(DeviceCommandService deviceCommandService, DeviceQueryService deviceQueryService, HealthThresholdCommandService healthThresholdCommandService) {
         this.deviceCommandService = deviceCommandService;
         this.deviceQueryService = deviceQueryService;
+        this.healthThresholdCommandService = healthThresholdCommandService;
     }
 
     @PostMapping("/assign")
@@ -72,6 +73,18 @@ public class DevicesController {
         }
         var deviceResource = DeviceResourceFromEntityAssembler.toResourceFromEntity(device.get());
         return ResponseEntity.ok(deviceResource);
+    }
+
+    @PutMapping("/{deviceRecordId}/health-thresholds")
+    public ResponseEntity<DeviceHealthMeasureResource> updateDeviceHealthThresholdsByDeviceRecordId(@PathVariable String deviceRecordId, @RequestBody UpdateDeviceHealthThresholdResource updateDeviceHealthThresholdResource) {
+        var updateHealthThresholdsCommand = UpdateHealthThresholdCommandFromResourceAssembler.toCommandFromResource(deviceRecordId, updateDeviceHealthThresholdResource);
+        var device = deviceCommandService.handle(updateHealthThresholdsCommand);
+        if (device.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var deviceHealthMeasureResource = DeviceHealthMeasureResourceFromEntityAssembler.toResourceFromEntity(device.get());
+        healthThresholdCommandService.handle(deviceHealthMeasureResource);
+        return ResponseEntity.ok(deviceHealthMeasureResource);
     }
 
 }
