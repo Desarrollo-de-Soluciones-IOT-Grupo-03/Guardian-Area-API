@@ -3,6 +3,7 @@ package com.digitaldart.guardian.area.monitoring.domain.model.aggregates;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.AssignDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.RegisterDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateDeviceCommand;
+import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateHealthThresholdsCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.*;
 import com.digitaldart.guardian.area.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
@@ -43,6 +44,7 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
     private ApiKey apiKey;
 
     @Getter
+    @Setter
     @Embedded
     private HealthThresholds healthThresholds;
 
@@ -84,6 +86,11 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
         this.deviceCareModes = command.deviceCareModes();
         this.bearer = command.bearer();
         this.deviceStatuses = command.deviceStatuses();
+    }
+
+    public void UpdateHealthThresholds(UpdateHealthThresholdsCommand command) {
+        this.healthThresholds = new HealthThresholds(command.minBpm(), command.maxBpm(),command.minSpO2(), command.maxSpO2());
+
     }
 
     public String getDeviceRecordId() {
