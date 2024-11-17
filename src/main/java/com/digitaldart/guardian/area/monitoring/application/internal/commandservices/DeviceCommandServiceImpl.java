@@ -6,6 +6,7 @@ import com.digitaldart.guardian.area.monitoring.domain.model.aggregates.Device;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.AssignDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.RegisterDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateDeviceCommand;
+import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateHealthThresholdsCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.GuardianAreaDeviceRecordId;
 import com.digitaldart.guardian.area.monitoring.domain.services.DeviceCommandService;
 import com.digitaldart.guardian.area.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
@@ -67,6 +68,17 @@ public class DeviceCommandServiceImpl implements DeviceCommandService {
             throw new ValidationException("Device not found");
         }
         device.get().updateDevice(command);
+        deviceRepository.save(device.get());
+        return device;
+    }
+
+    @Override
+    public Optional<Device> handle(UpdateHealthThresholdsCommand command) {
+        var device = deviceRepository.findByGuardianAreaDeviceRecordId(command.guardianAreaDeviceRecordId());
+        if (device.isEmpty()) {
+            throw new ValidationException("Device not found");
+        }
+        device.get().UpdateHealthThresholds(command);
         deviceRepository.save(device.get());
         return device;
     }
