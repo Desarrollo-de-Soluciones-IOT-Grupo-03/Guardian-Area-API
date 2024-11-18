@@ -1,13 +1,11 @@
 package com.digitaldart.guardian.area.monitoring.application.internal.commandservices;
 
-import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateHealthThresholdsCommand;
 import com.digitaldart.guardian.area.monitoring.domain.services.HealthThresholdCommandService;
 import com.digitaldart.guardian.area.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.DeviceHealthMeasureResource;
+import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.DeviceHealthThresholdsResource;
 import com.google.gson.Gson;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +21,7 @@ public class HealthThresholdCommandServiceImpl implements HealthThresholdCommand
     }
 
     @Override
-    public void handle(DeviceHealthMeasureResource command) {
+    public void handle(DeviceHealthThresholdsResource command) {
         try {
             MqttMessage mqttMessage = new MqttMessage(gson.toJson(command).getBytes());
             mqttMessage.setQos(2);
