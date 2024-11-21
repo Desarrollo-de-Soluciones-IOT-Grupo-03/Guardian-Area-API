@@ -88,6 +88,7 @@ public class WebSecurityConfiguration {
                                 "/swagger-ui.html",
                                 "/health-measures-stream",
                                 "/location-stream",
+                                "/chat-stream",
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/webjars/**").permitAll()

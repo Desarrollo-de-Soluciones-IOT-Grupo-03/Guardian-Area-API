@@ -1,8 +1,7 @@
 package com.digitaldart.guardian.area.monitoring.domain.services;
 
-import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateHealthThresholdsCommand;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.DeviceHealthMeasureResource;
+import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.DeviceHealthThresholdsResource;
 
 public interface HealthThresholdCommandService {
-    void handle(DeviceHealthMeasureResource resource);
+    void handle(DeviceHealthThresholdsResource resource);
 }

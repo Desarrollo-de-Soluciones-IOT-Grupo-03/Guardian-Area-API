@@ -1,6 +1,6 @@
 package com.digitaldart.guardian.area.monitoring.interfaces.rest.resource;
 
-public record DeviceHealthMeasureResource(
+public record DeviceHealthThresholdsResource(
     String deviceRecordId,
     int minBpm,
     int maxBpm,
