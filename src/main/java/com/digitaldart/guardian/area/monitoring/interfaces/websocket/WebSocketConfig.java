@@ -1,5 +1,6 @@
 package com.digitaldart.guardian.area.monitoring.interfaces.websocket;
 
+import com.digitaldart.guardian.area.monitoring.interfaces.websocket.handler.ChatWebSocketHandler;
 import com.digitaldart.guardian.area.monitoring.interfaces.websocket.handler.GpsWebSocketHandler;
 import com.digitaldart.guardian.area.monitoring.interfaces.websocket.handler.MyWebSocketHandler;
 import org.springframework.context.annotation.Configuration;
@@ -13,15 +14,18 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     private final MyWebSocketHandler webSocketHandler;
     private final GpsWebSocketHandler gpsWebSocketHandler;
+    private final ChatWebSocketHandler chatWebSocketHandler;
 
-    public WebSocketConfig(MyWebSocketHandler webSocketHandler, GpsWebSocketHandler gpsWebSocketHandler) {
+    public WebSocketConfig(MyWebSocketHandler webSocketHandler, GpsWebSocketHandler gpsWebSocketHandler, ChatWebSocketHandler chatWebSocketHandler) {
         this.webSocketHandler = webSocketHandler;
         this.gpsWebSocketHandler = gpsWebSocketHandler;
+        this.chatWebSocketHandler = chatWebSocketHandler;
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler, "/health-measures-stream").setAllowedOrigins("*");
         registry.addHandler(gpsWebSocketHandler, "/location-stream").setAllowedOrigins("*");
+        registry.addHandler(chatWebSocketHandler, "/chat-stream").setAllowedOrigins("*");
     }
 }
