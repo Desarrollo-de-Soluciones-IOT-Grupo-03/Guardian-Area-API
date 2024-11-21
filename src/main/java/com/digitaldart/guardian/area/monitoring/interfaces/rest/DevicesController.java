@@ -22,12 +22,9 @@ public class DevicesController {
     private final DeviceCommandService deviceCommandService;
     private final DeviceQueryService deviceQueryService;
 
-    private final HealthThresholdCommandService healthThresholdCommandService;
-
-    public DevicesController(DeviceCommandService deviceCommandService, DeviceQueryService deviceQueryService, HealthThresholdCommandService healthThresholdCommandService) {
+    public DevicesController(DeviceCommandService deviceCommandService, DeviceQueryService deviceQueryService) {
         this.deviceCommandService = deviceCommandService;
         this.deviceQueryService = deviceQueryService;
-        this.healthThresholdCommandService = healthThresholdCommandService;
     }
 
     @PostMapping("/assign")
@@ -74,17 +71,4 @@ public class DevicesController {
         var deviceResource = DeviceResourceFromEntityAssembler.toResourceFromEntity(device.get());
         return ResponseEntity.ok(deviceResource);
     }
-
-    @PutMapping("/{deviceRecordId}/health-thresholds")
-    public ResponseEntity<DeviceHealthMeasureResource> updateDeviceHealthThresholdsByDeviceRecordId(@PathVariable String deviceRecordId, @RequestBody UpdateDeviceHealthThresholdResource updateDeviceHealthThresholdResource) {
-        var updateHealthThresholdsCommand = UpdateHealthThresholdCommandFromResourceAssembler.toCommandFromResource(deviceRecordId, updateDeviceHealthThresholdResource);
-        var device = deviceCommandService.handle(updateHealthThresholdsCommand);
-        if (device.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        var deviceHealthMeasureResource = DeviceHealthMeasureResourceFromEntityAssembler.toResourceFromEntity(device.get());
-        healthThresholdCommandService.handle(deviceHealthMeasureResource);
-        return ResponseEntity.ok(deviceHealthMeasureResource);
-    }
-
 }

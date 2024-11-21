@@ -1,11 +1,11 @@
 package com.digitaldart.guardian.area.monitoring.interfaces.rest.transform;
 
 import com.digitaldart.guardian.area.monitoring.domain.model.aggregates.Device;
-import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.DeviceHealthMeasureResource;
+import com.digitaldart.guardian.area.monitoring.interfaces.rest.resource.DeviceHealthThresholdsResource;
 
-public class DeviceHealthMeasureResourceFromEntityAssembler {
-    public static DeviceHealthMeasureResource toResourceFromEntity(Device device) {
-        return new DeviceHealthMeasureResource(
+public class DeviceHealthThresholdsResourceFromEntityAssembler {
+    public static DeviceHealthThresholdsResource toResourceFromEntity(Device device) {
+        return new DeviceHealthThresholdsResource(
                 device.getDeviceRecordId(),
                 device.getHealthThresholds().minBpm(),
                 device.getHealthThresholds().maxBpm(),
